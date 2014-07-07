@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+ 
+    <dubbo:application name="xh-relationship-center"  />
+ 
+  	<!-- 测试环境 -->
+	<dubbo:registry protocol="zookeeper"
+		address="192.168.83.250:2181,192.168.83.251:2181,192.168.83.252:2181,192.168.83.253:2181,192.168.83.254:2181,192.168.83.255:2181" />
+	<!-- 生产环境 -->
+	<!-- 
+	<dubbo:registry protocol="zookeeper"
+		address="192.168.75.138:2181,192.168.75.139:2181,192.168.75.140:2181,192.168.75.141:2181,192.168.75.142:2181" />
+ 	-->
+ 
+    <dubbo:protocol name="dubbo" port="20880" />
+ 
+    <dubbo:service interface="com.xinhuanet.relationship.dubbo.service.UserRelationshipService" ref="userRelationshipService" />
+    <bean id="userRelationshipService" class="com.xinhuanet.relationship.dubbo.service.impl.UserRelationshipServiceImpl" />
+ 
+</beans>

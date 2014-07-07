@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user -->
+<!-- -->
+<!-- For professional support please see -->
+<!-- http://www.qos.ch/shop/products/professionalSupport -->
+<!-- -->
+<configuration>
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d [%t] %-5p %c - %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ROLLING_FILE_ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${user.home}/.apps/xh-relationship-center/log/root.log</File>
+		<encoder>
+			<pattern>%d [%t] %-5p %c - %m%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<!-- 只保存INFO及更高级别的log信息 -->
+			<level>INFO</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${user.home}/.apps/xh-relationship-center/log/root-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<!-- keep 90 days' worth of history -->
+			<maxHistory>90</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 10MB -->
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="ROLLING_FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${user.home}/.apps/xh-relationship-center/log/error.log</File>
+		<encoder>
+			<pattern>%d [%t] %-5p %c - %m%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<!-- 只保存ERROR级别的log信息 -->
+			<level>ERROR</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${user.home}/.apps/xh-relationship-center/log/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<!-- keep 90 days' worth of history -->
+			<maxHistory>90</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 10MB -->
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<root level="DEBUG">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="ROLLING_FILE_ROOT" />
+		<appender-ref ref="ROLLING_FILE_ERROR" />
+	</root>
+
+</configuration>

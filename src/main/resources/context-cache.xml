@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxActive" value="50" />
+		<property name="maxIdle" value="10" />
+		<property name="maxWait" value="1000" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testOnReturn" value="true" />
+	</bean>
+
+	<bean id="si1" class="redis.clients.jedis.JedisShardInfo">
+		<constructor-arg index="0" value="192.168.79.34" />
+		<constructor-arg index="1" value="6379" type="int" />
+		<constructor-arg index="2" value="2000" type="int" />
+		<constructor-arg index="3" value="redis1" />
+	</bean>
+
+	<bean id="jedisPool" class="redis.clients.jedis.ShardedJedisPool">
+		<constructor-arg index="0" ref="jedisPoolConfig" />
+		<constructor-arg index="1">
+			<list>
+				<ref bean="si1" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="cacheDao" class="com.xinhuanet.commons.cache.dao.RedisCacheDao">
+		<constructor-arg index="0" ref="jedisPool" />
+	</bean>
+
+	<bean id="advancedCacheDao" class="com.xinhuanet.commons.cache.dao.RedisAdvancedCacheDao">
+		<constructor-arg index="0" ref="jedisPool" />
+	</bean>
+
+	<bean id="cacheAspect" class="com.xinhuanet.commons.cache.aspect.CacheAspect">
+		<property name="cacheDao" ref="advancedCacheDao" />
+		<property name="defaultStringCacheTimeout" value="-1" />
+		<property name="defaultZsetCacheTimeout" value="-1" />
+		<property name="stringPersistenceKeySetIsValid" value="true" />
+		<property name="zsetPersistenceKeySetIsValid" value="true" />
+		<property name="stringPersistenceKeySetName" value="cache:common:persistence_key_set:string" />
+		<property name="zsetPersistenceKeySetName" value="cache:common:persistence_key_set:zset" />
+		<property name="stringCacheOperUseNewThread" value="false" />
+		<property name="zsetCacheOperUseNewThread" value="false" />
+	</bean>
+
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+</beans>
